@@ -209,7 +209,58 @@ int main() {
 
     return 0;
 }
+#hill cipher
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
 
+#define SIZE 2
+
+int keyMatrix[SIZE][SIZE] = {
+    {3, 3},
+    {2, 5}
+};
+
+void encrypt(char message[], char encrypted[]) {
+    int i, j, k;
+    int msgVector[SIZE], result[SIZE];
+
+    for (i = 0; i < strlen(message); i += SIZE) {
+        for (j = 0; j < SIZE; j++) {
+            msgVector[j] = toupper(message[i + j]) - 'A';
+        }
+
+        for (j = 0; j < SIZE; j++) {
+            result[j] = 0;
+            for (k = 0; k < SIZE; k++) {
+                result[j] += keyMatrix[j][k] * msgVector[k];
+            }
+            result[j] %= 26;
+        }
+
+        for (j = 0; j < SIZE; j++) {
+            encrypted[i + j] = result[j] + 'A';
+        }
+    }
+    encrypted[i] = '\0';
+}
+
+int main() {
+    char message[100], encrypted[100];
+
+    printf("Enter the message (even length, A-Z only): ");
+    scanf("%s", message);
+
+    if (strlen(message) % 2 != 0) {
+        printf("Message length must be even.\n");
+        return 1;
+    }
+
+    encrypt(message, encrypted);
+    printf("Encrypted message: %s\n", encrypted);
+
+    return 0;
+}
 
 #railfence
 
@@ -512,3 +563,22 @@ int main() {
     return 0;
 }
 playfair
+
+
+#hmaac 
+
+import hmac
+import hashlib
+def compute_digest(filename, key):
+    with open(filename, 'rb') as file:
+        file_data = file.read()
+    return hmac.new(key.encode(), file_data, hashlib.sha256).hexdigest()
+filename = input("Enter filename: ")
+key = input("Enter secret key: ")
+digest = compute_digest(filename, key)
+print("Generated HMAC:", digest)
+verify = input("Enter HMAC to validate: ")
+if digest==verify:
+    print("HMAC is valid. Message integrity verified.")
+else:
+    print(" HMAC is invalid. Message might be tampered.")
