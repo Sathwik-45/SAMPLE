@@ -1,3 +1,100 @@
+#include<stdio.h>
+#include<string.h>
+void ceasercipher(char *ciphertext,char *plaintext,int key)
+{
+    for(int i=0;plaintext[i]!='\0';i++)
+    {
+        if(plaintext[i]>='A' && plaintext[i]<='Z')
+        {
+        ciphertext[i]=(plaintext[i] -'A' + key) % 26 +'A';
+        }
+        else if(plaintext[i]>='a' && plaintext[i]<='z')
+        {
+           ciphertext[i]=(plaintext[i] -'a' + key) % 26 +'a';  
+        }
+    }
+}
+void main()
+{
+    char plaintext[100],ciphertext[100];
+    int key;
+    printf("Enter the plaintext\n");
+    fgets(plaintext,sizeof(plaintext),stdin);
+    printf("Enter the key size\n");
+    scanf("%d",&key);
+    ceasercipher(ciphertext,plaintext,key);
+    printf("After encryption\n");
+    printf("%s",ciphertext);
+}
+
+#hmaac 
+import hmac
+import hashlib
+def compute_digest(filename, key):
+    with open(filename, 'rb') as file:
+        file_data = file.read()
+    return hmac.new(key.encode(), file_data, hashlib.sha256).hexdigest()
+filename = input("Enter filename: ")
+key = input("Enter secret key: ")
+digest = compute_digest(filename, key)
+print("Generated HMAC:", digest)
+verify = input("Enter HMAC to validate: ")
+if digest==verify:
+    print("HMAC is valid. Message integrity verified.")
+else:
+    print(" HMAC is invalid. Message might be tampered.")
+
+#HILL CIPHER
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+
+int charToInt(char c) {
+    return toupper(c) - 'A';
+}
+
+char intToChar(int n) {
+    return (n % 26) + 'A';
+}
+
+int main() {
+    int key[3][3] = {
+        {3, 3, 2},
+        {2, 5, 1},
+        {1, 2, 4}
+    };
+
+    char plaintext[4];  // 3-letter input + null terminator
+    char ciphertext[4]; // 3-letter output + null terminator
+    int ptVec[3];
+    int ctVec[3];
+
+    printf("Enter 3-letter plaintext (A-Z): ");
+    scanf("%3s", plaintext);
+
+    ptVec[0] = charToInt(plaintext[0]);
+    ptVec[1] = charToInt(plaintext[1]);
+    ptVec[2] = charToInt(plaintext[2]);
+    for(int i=0;i<3;i++)
+    {
+    printf("%3d",ptVec[i]);
+    }
+    printf("\n");
+    ctVec[0] = (key[0][0] * ptVec[0] + key[0][1] * ptVec[1] + key[0][2] * ptVec[2]) % 26;
+    ctVec[1] = (key[1][0] * ptVec[0] + key[1][1] * ptVec[1] + key[1][2] * ptVec[2]) % 26;
+    ctVec[2] = (key[2][0] * ptVec[0] + key[2][1] * ptVec[1] + key[2][2] * ptVec[2]) % 26;
+
+    ciphertext[0] = intToChar(ctVec[0]);
+    ciphertext[1] = intToChar(ctVec[1]);
+    ciphertext[2] = intToChar(ctVec[2]);
+    ciphertext[3] = '\0';
+
+    printf("Encrypted text: %s\n", ciphertext);
+    printf("Decrypted text: %s\n",plaintext);
+    return 0;
+}
+
+
 #ceaser cipher
 
 #include <stdio.h>
@@ -267,37 +364,29 @@ int main() {
 
 #include <stdio.h>
 #include <string.h>
-
-// Function to encrypt using Rail Fence Cipher
-void encryptRailFence(char *text, int rails) {
+void RailFence(char *text, int rails) {
     int len = strlen(text);
     char rail[rails][len];
-    
-    // Initialize the rail matrix with '\n'
     for (int i = 0; i < rails; i++)
         for (int j = 0; j < len; j++)
-            rail[i][j] = '\n';
-
+            rail[i][j] = 'x';
     int dir_down = 0;
     int row = 0, col = 0;
-
-    // Fill the rail matrix in zigzag
     for (int i = 0; i < len; i++) {
         rail[row][col++] = text[i];
-
         if (row == 0)
             dir_down = 1;
         else if (row == rails - 1)
             dir_down = 0;
-
-        row += dir_down ? 1 : -1;
+        if (dir_down==0)
+            row--;
+        else if(dir_down==1)
+            row++;
     }
-
-    // Read the matrix row by row
     printf("Encrypted Text: ");
     for (int i = 0; i < rails; i++)
         for (int j = 0; j < len; j++)
-            if (rail[i][j] != '\n')
+            if (rail[i][j] != 'x')
                 printf("%c", rail[i][j]);
     printf("\n");
 }
@@ -305,15 +394,11 @@ void encryptRailFence(char *text, int rails) {
 int main() {
     char text[100];
     int rails;
-
     printf("Enter the plaintext (no spaces): ");
     scanf("%s", text);
-
     printf("Enter number of rails: ");
     scanf("%d", &rails);
-
-    encryptRailFence(text, rails);
-
+    RailFence(text, rails);
     return 0;
 }
 
@@ -450,34 +535,7 @@ VIEGNERE
 
 CEASER CIPHER
 
-#include<stdio.h>
-#include<string.h>
-void ceasercipher(char *ciphertext,char *plaintext,int key)
-{
-    for(int i=0;plaintext[i]!='\0';i++)
-    {
-        if(plaintext[i]>='A' && plaintext[i]<='Z')
-        {
-        ciphertext[i]=(plaintext[i] -'A' + key) % 26 +'A';
-        }
-        else if(plaintext[i]>='a' && plaintext[i]<='z')
-        {
-           ciphertext[i]=(plaintext[i] -'a' + key) % 26 +'a';  
-        }
-    }
-}
-void main()
-{
-    char plaintext[100],ciphertext[100];
-    int key;
-    printf("Enter the plaintext\n");
-    fgets(plaintext,sizeof(plaintext),stdin);
-    printf("Enter the key size\n");
-    scanf("%d",&key);
-    ceasercipher(ciphertext,plaintext,key);
-    printf("After encryption\n");
-    printf("%s",ciphertext);
-}
+
 
 
 PLAYFAIR
@@ -565,20 +623,4 @@ int main() {
 playfair
 
 
-#hmaac 
 
-import hmac
-import hashlib
-def compute_digest(filename, key):
-    with open(filename, 'rb') as file:
-        file_data = file.read()
-    return hmac.new(key.encode(), file_data, hashlib.sha256).hexdigest()
-filename = input("Enter filename: ")
-key = input("Enter secret key: ")
-digest = compute_digest(filename, key)
-print("Generated HMAC:", digest)
-verify = input("Enter HMAC to validate: ")
-if digest==verify:
-    print("HMAC is valid. Message integrity verified.")
-else:
-    print(" HMAC is invalid. Message might be tampered.")
