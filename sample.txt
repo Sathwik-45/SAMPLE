@@ -1,3 +1,4 @@
+#ceaser cipher
 #include<stdio.h>
 #include<string.h>
 void ceasercipher(char *ciphertext,char *plaintext,int key)
@@ -93,6 +94,121 @@ int main() {
     printf("Decrypted text: %s\n",plaintext);
     return 0;
 }
+
+#include <stdio.h>
+#include <string.h>
+void RailFence(char *text, int rails) {
+    int len = strlen(text);
+    char rail[rails][len];
+    for (int i = 0; i < rails; i++)
+        for (int j = 0; j < len; j++)
+            rail[i][j] = 'x';
+    int dir_down = 0;
+    int row = 0, col = 0;
+    for (int i = 0; i < len; i++) {
+        rail[row][col++] = text[i];
+        if (row == 0)
+            dir_down = 1;
+        else if (row == rails - 1)
+            dir_down = 0;
+        if (dir_down==0)
+            row--;
+        else if(dir_down==1)
+            row++;
+    }
+    printf("Encrypted Text: ");
+    for (int i = 0; i < rails; i++)
+        for (int j = 0; j < len; j++)
+            if (rail[i][j] != 'x')
+                printf("%c", rail[i][j]);
+    printf("\n");
+}
+
+int main() {
+    char text[100];
+    int rails;
+    printf("Enter the plaintext (no spaces): ");
+    scanf("%s", text);
+    printf("Enter number of rails: ");
+    scanf("%d", &rails);
+    RailFence(text, rails);
+    return 0;
+}
+
+
+
+ DEFFIE HELLMAN
+#include <stdio.h>
+#include <math.h>
+
+int main() {
+    long int p, g;
+    long int a, b;
+    long int A, B;
+    long int keyA, keyB;
+
+    printf("Enter a prime number (p): ");
+    scanf("%ld", &p);
+
+    printf("Enter a primitive root modulo p (g): ");
+    scanf("%ld", &g);
+
+    printf("Host A, enter private key (a): ");
+    scanf("%ld", &a);
+
+    printf("Host B, enter private key (b): ");
+    scanf("%ld", &b);
+
+    A = ((long int)pow(g, a)) % p;
+    B = ((long int)pow(g, b)) % p;
+
+    printf("\nHost A sends public key: %ld", A);
+    printf("\nHost B sends public key: %ld", B);
+
+    keyA = ((long int)pow(B, a)) % p;
+    keyB = ((long int)pow(A, b)) % p;
+
+    printf("\n\nHost A's shared secret key: %ld", keyA);
+    printf("\nHost B's shared secret key: %ld", keyB);
+
+    if (keyA == keyB) {
+        printf("\n Shared key successfully generated!\n");
+    } else {
+        printf("\n Shared key mismatch!\n");
+    }
+
+    return 0;
+}
+
+
+PASSWORD GENERATOR
+
+import secrets
+import string
+
+def generate_password(length):
+    if length < 8:
+        print("Password should be at least 8 characters long for strength.")
+        return None
+
+    # Character sets
+    letters = string.ascii_letters
+    digits = string.digits
+    symbols = string.punctuation
+
+    # Combine all character sets
+    all_chars = letters + digits + symbols
+
+    # Generate a secure random password
+    password = ''.join(secrets.choice(all_chars) for _ in range(length))
+    return password
+
+# Get desired length from user
+length = int(input("Enter the length of the password (minimum 8): "))
+password = generate_password(length)
+
+if password:
+    print("Generated Strong Password:", password)
 
 
 #ceaser cipher
